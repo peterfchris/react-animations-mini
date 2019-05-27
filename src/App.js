@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Card from './Card';
 import './App.css';
+import {TransitionMotion, spring} from 'react-motion';
 
 
 export default class App extends Component {
@@ -55,17 +56,19 @@ export default class App extends Component {
         })
     }
 
+    getDefaultStyles = () => {
+        return this.state.todos.map(todo => {
+            return Object.assign({}, todo, {style: {height: 0, opacity: 0}})
+        })
+    }
+
+    getStyles = () => {
+        return this.state.todos.map(todo => {
+            return objectHash.assign({}, todo, {style: {height: 65, opacity: 1}})
+        })
+    }
 
     render() {
-
-        const todos = this.state.todos.map( (todo, i) => {
-            return <Card 
-                        key={i}
-                        toggle={ this.toggle }
-                        removeTodo={ this.removeTodo } 
-                        todo={ todo } /> 
-        })
-
         return(
             <div className='app'>
                 <h1>to-dos</h1>
@@ -80,9 +83,20 @@ export default class App extends Component {
                                 /> 
                         </form>   
                     </div>
-                    <div>
-                        { todos }
-                    </div>  
+                    <TransitionMotion
+                        defaultStyles={this.getDefaultStyles()}
+                        styles={this.getDefaultStyles()}
+                        >
+                        <div>
+                            { this.state.todos.map( (todo, i) => {
+                                return <Card 
+                                            key={i}
+                                            toggle={ this.toggle }
+                                            removeTodo={ this.removeTodo } 
+                                            todo={ todo } /> 
+                            })}
+                        </div> 
+                    </TransitionMotion> 
                 </div> 
             </div> 
         )
